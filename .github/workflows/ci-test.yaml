@@ -1,0 +1,27 @@
+name: VTMP CI/CD Pipeline
+on:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run lint
+        run: npm run lint
+      
+      - name: Run front-end tests
+        run: |
+          cd front-end
+          npm install
+          npx jest
+      
+      - name: Run back-end tests
+        run: |
+          cd back-end
+          npm install
+          npx jest
