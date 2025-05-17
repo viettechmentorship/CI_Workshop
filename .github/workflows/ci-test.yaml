@@ -5,22 +5,42 @@ on:
       - "**"
 
 jobs:
-  build:
+  front-end-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run front-end tests
-        run: |
-          cd front-end
-          npm install
-          npm run lint
-          npx jest
-      
-      - name: Run back-end tests
-        run: |
-          cd back-end
-          npm install
-          npm run lint
-          npx jest
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npx jest --coverage
+    
+  back-end-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: back-end
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npx jest --coverage
