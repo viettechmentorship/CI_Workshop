@@ -11,17 +11,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run lint
-        run: npm run lint
-      
       - name: Run front-end tests
         run: |
           cd front-end
           npm install
+          npm run lint
           npx jest
       
       - name: Run back-end tests
         run: |
           cd back-end
           npm install
+          npm run lint
           npx jest
