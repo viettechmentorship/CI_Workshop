@@ -1,4 +1,4 @@
-name: VTMP CI/CD Pipeline
+name: VTMP CI/CD Pipeline Demo
 on:
   pull_request:
     branches:
