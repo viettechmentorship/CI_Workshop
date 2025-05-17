@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tests
         run: npx jest --coverage
-    
+
   back-end-test:
     runs-on: ubuntu-latest
     defaults:
