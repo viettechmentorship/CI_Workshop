@@ -26,7 +26,9 @@ jobs:
         run: npm run lint
 
       - name: Run tests with coverage
-        run: npx jest --coverage --json --outputFile=../jest-results.json
+        run: | 
+          npx jest --coverage --json --outputFile=jest-results.json
+          mv jest-results.json ../jest
 
       - name: Generate Markdown comment
         run: node ../scripts/jest-to-md.js
