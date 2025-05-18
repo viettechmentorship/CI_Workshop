@@ -1,6 +1,12 @@
+
 import getHello from "../../component/getHello";
 export default function Home() {
-  const backendResponse = getHello();
+  const backendResponse = getHello().then((response) => {
+    return response;
+  }).catch((error) => {
+    console.error("Error fetching data from backend:", error);
+    return "Error fetching data from backend";
+  });
   const yourName = "John Doe"; // Replace with your name
   return (
     <div>
