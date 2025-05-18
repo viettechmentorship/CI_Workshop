@@ -25,8 +25,28 @@ jobs:
       - name: Run lint
         run: npm run lint
 
-      - name: Run tests
-        run: npx jest --coverage
+      - name: Run tests with coverage
+        run: npx jest --coverage --json --outputFile=jest-results.json
+
+      - name: Generate Markdown comment
+        run: node ../scripts/jest-to-md.js
+
+      - name: Check PR Changes
+        id: pr-changes
+        run: echo "::set-output name=changes::${{ toJson(github.event.pull_request.changed_files) }}"
+
+      - name: Create Comment
+        if: steps.pr-changes.outputs.changes != '[]'
+        run: |
+          # Use GitHub API to create a comment on the PR
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPORT_URL=${{ steps.capture-url.outputs.report_url }}
+          COMMENT=$(cat ../jest-comment.md | jq -Rs .)
+          GITHUB_TOKEN=${{ secrets.GH_TOKEN }}
+          COMMENT_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
+
+          curl -s -H "Authorization: token ${GITHUB_TOKEN}" -X POST $COMMENT_URL -d "{\"body\":\"$COMMENT\"}"
+
 
   back-end-test:
     runs-on: ubuntu-latest
