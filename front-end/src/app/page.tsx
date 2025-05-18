@@ -7,7 +7,7 @@ export default function Home() {
     console.error("Error fetching data from backend:", error);
     return "Error fetching data from backend";
   });
-  const yourName = "John Doe"; // Replace with your name
+  const yourName = "James Doe"; // Replace with your name
   return (
     <div>
       <h1>Welcome to the Frontend {yourName}!</h1>
