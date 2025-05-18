@@ -8,7 +8,6 @@ const result = `
 
 - **Suites**: ${data.numPassedTestSuites}/${data.numTotalTestSuites} passed
 - **Tests**: ${data.numPassedTests}/${data.numTotalTests} passed
-- **Time**: ${data.testResults[0].perfStats.runtime}ms
 
 <details><summary>Show files</summary>
 
