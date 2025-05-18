@@ -34,7 +34,7 @@ jobs:
 
       - name: Check PR Changes
         id: pr-changes
-        run: echo "::set-output name=changes::${{ toJson(github.event.pull_request.changed_files) }}"
+        run: echo "changes=${{ toJson(github.event.pull_request.changed_files) }}"
 
       - name: Create Comment
         if: steps.pr-changes.outputs.changes != '[]'
