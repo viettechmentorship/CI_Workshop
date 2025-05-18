@@ -1,45 +1,61 @@
-# name: VTMP Deployment Demo
-# on:
-#   # push:
-#   #   branches:
-#   #     - main
-#   workflow_dispatch:
-#     inputs:
-#       environment:
-#         description: 'Select the environment to deploy to'
-#         required: true
-#         default: 'staging'
-#         type: choice
-#         options:
-#           - staging
-#           - production
-#   pull_request:
-#     branches:
-#       - "**"
+name: VTMP Deployment Demo
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+  # pull_request:
+  #   branches:
+  #     - "**"
   
-# jobs:
-#   deploy-front-end:
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: front-end
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
+jobs:
+  deploy-front-end:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-#       - name: Install dependencies
-#         run: npm install
+      - name: Install dependencies
+        run: npm install
 
-#       - name: Build the project
-#         run: npm run build
+      - name: Build the project
+        run: npm run build
+      
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+      - name: Configure Vercel CLI
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          mkdir -p .vercel
+          printf '{"orgId":"%s","projectId":"%s"}' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
 
-#       - name: Deploy to Vercel
-#         env:
-#           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-#         run: vercel --token $VERCEL_TOKEN --yes --prod --yes
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+          vercel --token $VERCEL_TOKEN --yes --prod --yes;
+          else
+          vercel --token $VERCEL_TOKEN --yes;
+          fi
       
