@@ -46,7 +46,8 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           mkdir -p .vercel
-          echo '{"orgId": $VERCEL_ORG_ID, "projectId": $VERCEL_PROJECT_ID}' > .vercel/project.json
+          printf '{"orgId":"%s","projectId":"%s"}' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
+
 
       - name: Deploy to Vercel
         env:
