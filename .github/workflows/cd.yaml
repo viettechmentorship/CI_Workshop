@@ -1,21 +1,21 @@
 name: VTMP Deployment Demo
 on:
-  # push:
-  #   branches:
-  #     - main
-  # workflow_dispatch:
-  #   inputs:
-  #     environment:
-  #       description: 'Select the environment to deploy to'
-  #       required: true
-  #       default: 'staging'
-  #       type: choice
-  #       options:
-  #         - staging
-  #         - production
-  pull_request:
+  push:
     branches:
-      - "**"
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+  # pull_request:
+  #   branches:
+  #     - "**"
   
 jobs:
   front-end-deployment:
@@ -52,5 +52,10 @@ jobs:
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel --token $VERCEL_TOKEN --yes;
+        run: |
+          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+          vercel --token $VERCEL_TOKEN --yes --prod --yes;
+          else
+          vercel --token $VERCEL_TOKEN --yes;
+          fi
       
