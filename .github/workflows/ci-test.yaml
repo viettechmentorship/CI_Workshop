@@ -1,27 +1,49 @@
-# name: VTMP CI/CD Pipeline Demo
-# on:
-#   we want to run the ci only when it's a PR
+name: VTMP Simple CI/CD Demo
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - "**"
+  
+jobs:
+  hello-world-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-# jobs:
-#   job-1: (for front-end)
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: working directory we want to run
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: which node version we want to use
-
-#       - name: Install dependencies
-#         run: what is the command to install dependencies
-      
-#       - name: Run lint
-#         run: what is the command to run lint
-
-#       - name: Run tests
-#         run: what is the command to run tests
+      - name: Print Hello World
+        run: echo "Hello World!"
+        
+  test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Print testing message
+        run: echo "Running frontend tests..."
+        
+      - name: Simple test result
+        run: echo "Frontend tests completed"
+        
+  test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: back-end
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Print testing message
+        run: echo "Running backend tests..."
+        
+      - name: Simple test result
+        run: echo "Backend tests completed successfully"
