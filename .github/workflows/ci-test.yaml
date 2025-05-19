@@ -26,6 +26,9 @@ jobs:
         run: npm run lint
 
       - name: Run tests
+        run: npx jest --coverage --json --outputFile=jest-results.json
+
+      - name: Read jest tests
         run: |
           PASS_COUNT=$(jq '.numPassedTests' jest-results.json)
           FAIL_COUNT=$(jq '.numFailedTests' jest-results.json)
