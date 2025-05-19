@@ -29,8 +29,8 @@ jobs:
         run: | 
           npx jest --coverage --json --outputFile=jest-results.json
 
-      # - name: Generate Markdown comment
-      #   run: node ../scripts/jest-to-md.js
+      - name: Generate Markdown comment
+        run: node ../scripts/jest-to-md.js
 
       - name: Check PR Changes
         id: pr-changes
@@ -41,7 +41,7 @@ jobs:
         run: |
           # Use GitHub API to create a comment on the PR
           PR_NUMBER=${{ github.event.pull_request.number }}
-          COMMENT="Test passed."
+          COMMENT=$(cat jest-comment.md)
           GITHUB_TOKEN=${{ secrets.GH_TOKEN }}
           COMMENT_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
 
