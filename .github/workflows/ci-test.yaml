@@ -3,9 +3,7 @@ on:
   pull_request:
     branches:
       - "**"
-
 jobs:
-  job-1: 
   test-front-end:
     runs-on: ubuntu-latest
     defaults:
@@ -14,17 +12,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
       - name: Install dependencies
         run: npm i
-      
       - name: Run lint
         run: npm run lint
-
       - name: Run tests
         run: npx jest
