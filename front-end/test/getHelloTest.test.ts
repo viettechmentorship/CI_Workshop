@@ -14,6 +14,6 @@ describe('getHello', () => {
         const result = await getHello();
 
         // Assert the result
-        expect(result).toBe('Hello from the backend!');
+        expect(result).toBe('Hello world');
     });
 });
