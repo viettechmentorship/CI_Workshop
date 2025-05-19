@@ -1,52 +1,52 @@
 # name: VTMP Deployment Demo
 # on:
-  # push:
-  #   branches:
-  #     - main
-  # workflow_dispatch:
-  #   inputs:
-  #     environment:
-  #       description: 'Select the environment to deploy to'
-  #       required: true
-  #       default: 'staging'
-  #       type: choice
-  #       options:
-  #         - staging
-  #         - production
-  # pull_request:
-  #   branches:
-  #     - "**"
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: 'Select the environment to deploy to'
+#         required: true
+#         default: 'staging'
+#         type: choice
+#         options:
+#           - staging
+#           - production
+#   pull_request:
+#     branches:
+#       - "**"
   
 # jobs:
 # we want to deploy front-end
-  # job-name:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: which working directory you want to deploy
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+#   job-name:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: which working directory you want to deploy
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-  #     - name: Set up Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: which node version you want to use
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: which node version you want to use
 
-  #     - name: Install dependencies
-  #       run: what is the command to install dependencies
+#       - name: Install dependencies
+#         run: what is the command to install dependencies
 
-  #     - name: Build the project
-  #       run: what is the command to build the project
+#       - name: Build the project
+#         run: what is the command to build the project
       
-  #     - name: Install Vercel CLI
-  #       run: what is the command to install Vercel CLI
+#       - name: Install Vercel CLI
+#         run: what is the command to install Vercel CLI
 
-  #     - name: Configure Vercel CLI
-  #       Make sure it's deployed to the right project on Vercel
-  #       Given the project id and token are set in the secrets
+#       - name: Configure Vercel CLI
+#         Make sure it's deployed to the right project on Vercel
+#         Given the project id and token are set in the secrets
 
 
-  #     - name: Deploy to Vercel
-  #       what is the command to deploy to Vercel
+#       - name: Deploy to Vercel
+#         what is the command to deploy to Vercel
       
