@@ -1,27 +1,73 @@
-# name: VTMP CI/CD Pipeline Demo
-# on:
-#   we want to run the ci only when it's a PR
+name: VTMP CI/CD Pipeline Demo
+on:
+  pull_request:
+    branches:
+      - "**"
 
-# jobs:
-#   job-1: (for front-end)
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: working directory we want to run
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
+jobs:
+  front-end-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: which node version we want to use
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-#       - name: Install dependencies
-#         run: what is the command to install dependencies
+      - name: Install dependencies
+        run: npm install
       
-#       - name: Run lint
-#         run: what is the command to run lint
+      - name: Run lint
+        run: npm run lint
 
-#       - name: Run tests
-#         run: what is the command to run tests
+      - name: Run tests with coverage
+        run: | 
+          npx jest --coverage --json --outputFile=jest-results.json
+
+      # - name: Generate Markdown comment
+      #   run: node ../scripts/jest-to-md.js
+      
+      - name: Get Number of Pass and Fail Test in jest-results.json
+        id: test-results
+        run: |
+          PASS_COUNT=$(jq '.numPassedTests' jest-results.json)
+          FAIL_COUNT=$(jq '.numFailedTests' jest-results.json)
+          echo "PASS_COUNT=$PASS_COUNT" >> $GITHUB_ENV
+          echo "FAIL_COUNT=$FAIL_COUNT" >> $GITHUB_ENV
+
+      - name: Check PR Changes
+        id: pr-changes
+        run: echo "changes=${{ toJson(github.event.pull_request.changed_files) }}"
+
+      - name: Create Comment
+        if: steps.pr-changes.outputs.changes != '[]'
+        run: |
+          # Use GitHub API to create a comment on the PR
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          GITHUB_TOKEN=${{ secrets.GH_TOKEN }}
+          COMMENT_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
+          COMMENT="Failed tests: $FAIL_COUNT\nPassed tests: $PASS_COUNT\n\n"
+          curl -s -H "Authorization: token ${GITHUB_TOKEN}" -X POST $COMMENT_URL -d "{\"body\":\"${COMMENT}\"}"
+
+
+  back-end-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: back-end
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
