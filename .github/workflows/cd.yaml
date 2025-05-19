@@ -18,6 +18,7 @@ on:
   #     - "**"
   
 jobs:
+
   deploy-front-end:
     runs-on: ubuntu-latest
     defaults:
@@ -30,7 +31,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
@@ -40,6 +41,8 @@ jobs:
       
       - name: Install Vercel CLI
         run: npm install -g vercel
+
+
       - name: Configure Vercel CLI
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -47,7 +50,6 @@ jobs:
         run: |
           mkdir -p .vercel
           printf '{"orgId":"%s","projectId":"%s"}' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
-
 
       - name: Deploy to Vercel
         env:
@@ -58,4 +60,4 @@ jobs:
           else
           vercel --token $VERCEL_TOKEN --yes;
           fi
-      
+
