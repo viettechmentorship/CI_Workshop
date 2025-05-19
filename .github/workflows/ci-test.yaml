@@ -1,27 +1,29 @@
-# name: VTMP CI/CD Pipeline Demo
-# on:
-#   we want to run the ci only when it's a PR
+name: VTMP CI/CD Pipeline Demo
+on:
+  pull_request:
+    branches:
+      - "**"
 
-# jobs:
-#   job-1: (for front-end)
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: working directory we want to run
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
+jobs:
+  test-front-end:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: which node version we want to use
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-#       - name: Install dependencies
-#         run: what is the command to install dependencies
+      - name: Install dependencies
+        run: npm install
       
-#       - name: Run lint
-#         run: what is the command to run lint
+      - name: Run lint
+        run: npm run lint
 
-#       - name: Run tests
-#         run: what is the command to run tests
+      - name: Run tests
+        run: npx jest --coverage
