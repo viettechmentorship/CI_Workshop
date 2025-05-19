@@ -1,29 +1,49 @@
-# name: VTMP CI/CD Pipeline Demo
-# on:
-#   pull_request:
-#     branches:
-#       - "**"
+name: VTMP CI/CD Pipeline Demo
+on:
+  pull_request:
+    branches:
+      - "**"
 
-# jobs:
-#   test-front-end:
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: front-end
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
+jobs:
+  test-front-end: 
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: 20
-          
-#       - name: Install dependencies
-#         run: npm install
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
       
-#       - name: Run lint
-#         run: npm run lint
+      - name: Run lint
+        run: npm run lint
 
-#       - name: Run tests
-#         run: npx jest
+      - name: Run tests
+        run: npx jest --coverage --json --outputFile=jest-results.json
+
+
+      - name: Read Jest results
+        id: jest-results
+        run: |
+          PASS_COUNT=$(jq '.numPassedTests' jest-results.json)
+          FAIL_COUNT=$(jq '.numFailedTests' jest-results.json)
+          echo "PASS_COUNT=$PASS_COUNT" >> $GITHUB_ENV
+          echo "FAIL_COUNT=$FAIL_COUNT" >> $GITHUB_ENV
+        
+      - name: Post Comment to PR
+        run: |
+          PR_NUMBER=$(jq '.pull_request.number' $GITHUB_EVENT_PATH)
+          GITHUB_TOKEN=${{ secrets.GH_TOKEN }}
+          COMMENT_BODY="### Jest Test Results\n\n- Passed: $PASS_COUNT\n- Failed: $FAIL_COUNT"
+          COMMENT_URL="https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/comments"
+          curl -s -H "Authorization: token $GITHUB_TOKEN" \
+               -X POST \
+               -d "{\"body\": \"$COMMENT_BODY\"}" \
+               $COMMENT_URL
