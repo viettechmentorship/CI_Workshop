@@ -1,6 +1,6 @@
 # name: VTMP CI/CD Pipeline Demo
 # on:
-#   we want to run the ci only when it's a PR
+#   we want to run the ci only when it's a P
 
 # jobs:
 #   job-1: (for front-end)
@@ -19,7 +19,7 @@
 
 #       - name: Install dependencies
 #         run: what is the command to install dependencies
-      
+
 #       - name: Run lint
 #         run: what is the command to run lint
 
