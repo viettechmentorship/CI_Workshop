@@ -26,13 +26,14 @@ jobs:
         run: npm run lint
 
       - name: Run tests
-        run: npx jest --json --outputFile=jest-results.json
+        run: npx jest --coverage --json --outputFile=jest-results.json
+
 
       - name: Read Jest results
         id: jest-results
         run: |
-          PASS_COUNT = $(jq '.numPassedTests' jest-results.json)
-          FAIL_COUNT = $(jq '.numFailedTests' jest-results.json)
+          PASS_COUNT=$(jq '.numPassedTests' jest-results.json)
+          FAIL_COUNT=$(jq '.numFailedTests' jest-results.json)
           echo "PASS_COUNT=$PASS_COUNT" >> $GITHUB_ENV
           echo "FAIL_COUNT=$FAIL_COUNT" >> $GITHUB_ENV
         
