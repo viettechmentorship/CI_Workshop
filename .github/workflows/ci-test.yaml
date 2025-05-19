@@ -31,6 +31,14 @@ jobs:
 
       - name: Generate Markdown comment
         run: node ../scripts/jest-to-md.js
+      
+      - name: Read jest-comment Markdown file
+        id: read-comment
+        run: |
+          COMMENT=$(cat jest-comment.md)
+          echo "comment<<EOF" >> $GITHUB_ENV
+          echo "$COMMENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Check PR Changes
         id: pr-changes
@@ -41,7 +49,7 @@ jobs:
         run: |
           # Use GitHub API to create a comment on the PR
           PR_NUMBER=${{ github.event.pull_request.number }}
-          COMMENT=$(cat jest-comment.md)
+          COMMENT="${{ env.comment }}"
           GITHUB_TOKEN=${{ secrets.GH_TOKEN }}
           COMMENT_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
 
