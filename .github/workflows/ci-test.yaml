@@ -16,13 +16,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: which node version we want to use
 
       - name: Install dependencies
-        run: npm install
+        run: what is the command to install dependencies
       
       - name: Run lint
-        run: npm run lint
+        run: what is the command to run lint
 
       - name: Run tests
-        run: npx jest
+        run: what is the command to run tests
