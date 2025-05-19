@@ -29,16 +29,16 @@ jobs:
         run: | 
           npx jest --coverage --json --outputFile=jest-results.json
 
-      - name: Generate Markdown comment
-        run: node ../scripts/jest-to-md.js
+      # - name: Generate Markdown comment
+      #   run: node ../scripts/jest-to-md.js
       
-      - name: Read jest-comment Markdown file
-        id: read-comment
+      - name: Get Number of Pass and Fail Test in jest-results.json
+        id: test-results
         run: |
-          COMMENT=$(cat jest-comment.md)
-          echo "COMMENT<<EOF" >> $GITHUB_ENV
-          echo "$COMMENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          PASS_COUNT=$(jq '.numPassedTests' jest-results.json)
+          FAIL_COUNT=$(jq '.numFailedTests' jest-results.json)
+          echo "PASS_COUNT=$PASS_COUNT" >> $GITHUB_ENV
+          echo "FAIL_COUNT=$FAIL_COUNT" >> $GITHUB_ENV
 
       - name: Check PR Changes
         id: pr-changes
@@ -51,7 +51,7 @@ jobs:
           PR_NUMBER=${{ github.event.pull_request.number }}
           GITHUB_TOKEN=${{ secrets.GH_TOKEN }}
           COMMENT_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
-
+          COMMENT="Failed tests: $FAIL_COUNT\nPassed tests: $PASS_COUNT\n\n"
           curl -s -H "Authorization: token ${GITHUB_TOKEN}" -X POST $COMMENT_URL -d "{\"body\":\"${COMMENT}\"}"
 
 
