@@ -26,4 +26,16 @@ jobs:
         run: npm run lint
 
       - name: Run tests
-        run: npx jest
+        run: npx jest --json --outputFile=jest-results.json
+
+      - name: Read test results
+        id: read-results
+        run: |
+          PASS_COUNT=$(jq '.numPassedTests' jest-results.json)
+          FAIL_COUNT=$(jq '.numFailedTests' jest-results.json)
+          echo "pass_count=$PASS_COUNT" >> $GITHUB_ENV
+          echo "fail_count=$FAIL_COUNT" >> $GITHUB_ENV
+      - name: Post comment to PR 
+        run : | 
+          PR_NUMBER=$(jq -r '.pull_request.number' $GITHUB_EVENT_PATH)
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
